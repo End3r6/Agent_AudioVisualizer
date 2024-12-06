@@ -25,8 +25,11 @@ class Simulation
         this.height = simulationSettings.height;
 
         this.fadeFactor = simulationSettings.fadeFactor;
+        this.diffuseFactor = simulationSettings.diffuseFactor;
 
         this.emitter = emitter;
+
+        this.currentFrame = 0;
 
         this.agents = Array();
         for (let s = 0; s < simulationSettings.speciesSettings.length; s++) 
@@ -64,9 +67,9 @@ class Simulation
         // Update trail texture
         this.trailTexture.pixels.forEach((pixel) => {
             if (pixel.a > 0) {
-                pixel.r -= 1 * this.fadeFactor;
-                pixel.g -= 1 * this.fadeFactor;
-                pixel.b -= 1 * this.fadeFactor;
+                pixel.r -= this.fadeFactor;
+                pixel.g -= this.fadeFactor;
+                pixel.b -= this.fadeFactor;
             }
         });
 
@@ -78,8 +81,10 @@ class Simulation
             this.trailTexture.setPixel(position.x, position.y, agent.color); // Add new pixel to trail texture
         });
 
-        // Copy trail texture to display texture
-        this.displayTexture.pixels = this.trailTexture.pixels.slice();
+        // Copy diffuse map to display texture
+        this.displayTexture.pixels = this.diffuseTexture.pixels.slice();
+
+        this.currentFrame ++;
     }
 
     getRandomNumber(min, max) 

@@ -19,6 +19,28 @@ import { BeatDetector } from "./BeatDetector.js"
 import { EventEmitter } from "./EventEmitter.js";
 import { SimulationSettings, SpeciesSettings } from "./Settings.js";
 
+function checkWebGLSupport() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+            console.log('WebGL is supported');
+            return true;
+        } else {
+            console.error('WebGL is not supported');
+            return false;
+        }
+    } catch (e) {
+        console.error('WebGL is not supported', e);
+        return false;
+    }
+}
+
+if (!checkWebGLSupport()) {
+    console.error('WebGL is not supported in this browser. Please use a modern browser.');
+}
+
+
 // Get the save settings button
 const saveSettingsButton = document.getElementById('save-settings');
 
@@ -74,10 +96,12 @@ saveSettingsButton.addEventListener('click', () => {
     const width = parseInt(document.getElementById('width').value);
     const height = parseInt(document.getElementById('height').value);
     const fadeFactor = parseFloat(document.getElementById('fade-factor').value);
+    const diffuseFactor = parseFloat(document.getElementById('diffuse-factor').value);
+    const threshold = parseFloat(document.getElementById('threshold').value);
 
     // Create a new simulation settings object
     const newSimulationSettings = new SimulationSettings(
-        width, height, fadeFactor, 600,
+        width, height, fadeFactor, threshold, diffuseFactor,
         []
     );
 

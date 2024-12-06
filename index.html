@@ -5,106 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Canvas Drawing</title>
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-
-        /* Add some basic styling to make the GUI look decent */
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .simulation-settings {
-            width: 500px;
-            margin-left: 10px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .simulation-settings h2 {
-            margin-top: 0;
-        }
-
-        .simulation-settings label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .simulation-settings input[type="number"] {
-            width: 100%;
-            height: 30px;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-
-        .simulation-settings input[type="file"] {
-            width: 100%;
-            height: 30px;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-
-        .simulation-settings button {
-            width: 100%;
-            height: 40px;
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .simulation-settings button:hover {
-            background-color: #3e8e41;
-        }
-
-        .species-settings-table {
-            border-collapse: collapse;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        .species-settings-table td {
-            height: 40px;
-            overflow: hidden;
-        }
-
-        .species-settings-table th {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-            background-color: #f0f0f0;
-        }
-
-        .species-settings-table input[type="number"],
-        .species-settings-table input[type="color"],
-        .species-settings-table button {
-            padding: 0;
-            border: none;
-            font-size: 16px;
-            margin: auto;
-        }
-
-        .species-settings-table button {
-            height: 80%;
-        }
-
-        .species-settings-table input[type="color"] {
-            height: 90%;
-        }
-
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -113,15 +14,45 @@
 
         <div class="simulation-settings">
             <h2>Simulation Settings</h2>
-            <label for="width">Width:</label>
-            <input type="number" id="width" value="800">
-            <label for="height">Height:</label>
-            <input type="number" id="height" value="600">
-            <label for="fade-factor">Fade Factor:</label>
-            <input type="number" id="fade-factor" value="5">
-            <input type="file" id="song-upload" accept="audio/*">
+            <div class="side-by-side">
+                <div id="canvas-size" class="side-by-side">
+                    <div>
+                        <label for="width">Width:</label>
+                        <input type="number" id="width" value="800">
+                    </div>
+                    <div>
+                        <label for="height">Height:</label>
+                        <input type="number" id="height" value="600">
+                    </div>
+                </div>
+            </div>
+            <div class="side-by-side">
+                <div>
+                    <label for="fade-factor">Fade Factor:</label>
+                    <input type="number" id="fade-factor" value="5">
+                </div>
+                <div>
+                    <label for="diffuse-factor">Diffuse Factor:</label>
+                    <input type="number" id="diffuse-factor" value="0.5">
+                </div>
+            </div>
+
+            <h2>Audio Settings</h2>
+            <div class="side-by-side" id="audio-settings">
+                <div>
+                    <label for="song-upload">Song:</label>
+                    <label for="song-upload" class="custom-file-upload">Upload Song</label>
+                    <input type="file" class="song-upload" id="song-upload" accept="audio/*" />
+                </div>
+                <div>
+                    <br/>
+                    <label for="threshold">Threshold:</label>
+                    <input type="number" id="threshold" value="600">
+                </div>
+            </div>
+
             <h2>Species Settings</h2>
-            <div class="species-settings-table-wrapper" style="max-height: 120px; overflow-y: auto;">
+            <div class="species-settings-table-wrapper" style="max-height: 170px; overflow-y: auto;">
                 <table class="species-settings-table">
                     <thead>
                         <tr>
@@ -139,6 +70,7 @@
                     </tbody>
                 </table>
             </div>
+            <br/>
             <button id="add-species">Add Species</button>
             <button id="save-settings">Run</button>
         </div>

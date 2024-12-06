@@ -14,12 +14,13 @@
 
 class SimulationSettings
 {
-    constructor(width, height, fadeFactor, threshold, speciesSettings)
+    constructor(width, height, fadeFactor, threshold, diffuseFactor, speciesSettings)
     {
         this.width = width;
         this.height = height;
         this.fadeFactor = fadeFactor;
         this.threshold = threshold;
+        this.diffuseFactor = diffuseFactor;
         this.speciesSettings = speciesSettings;
 
         let numAgents = 0;

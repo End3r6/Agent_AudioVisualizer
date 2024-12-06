@@ -1,0 +1,115 @@
+canvas {
+    border: 1px solid black;
+}
+
+/* Add some basic styling to make the GUI look decent */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.simulation-settings {
+    width: 500px;
+    margin-left: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.simulation-settings h2 {
+    margin-top: 0;
+}
+
+.simulation-settings label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.simulation-settings input[type="number"] {
+    width: 90%;
+    height: 30px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.simulation-settings button {
+    width: 100%;
+    height: 40px;
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.simulation-settings button:hover {
+    background-color: #3e8e41;
+}
+
+.species-settings-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.species-settings-table td {
+    height: 40px;
+    overflow: hidden;
+}
+
+.species-settings-table th {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+.species-settings-table input[type="number"],
+.species-settings-table input[type="color"],
+.species-settings-table button {
+    width: 100%;
+    border: none;
+    font-size: 16px;
+    margin: auto;
+}
+
+.species-settings-table button {
+    height: 75%;
+}
+
+.species-settings-table input[type="color"] {
+    height: 90%;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.side-by-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    width: 100%;
+    height: 30px;
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 30px;
+}
