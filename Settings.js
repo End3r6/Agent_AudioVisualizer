@@ -43,14 +43,16 @@ class SimulationSettings
 
 class SpeciesSettings
 {
-    constructor(color, numAgents)
+    constructor(color, numAgents, speed)
     {
         this.color = color;
         this.numAgents = numAgents;
+        this.speed = speed;
     }
 
     getColor() { return this.color; }
     getNumAgents() { return this.numAgents; }
+    getSpeed() { return this.speed; }
 }
 
 export { SimulationSettings, SpeciesSettings }

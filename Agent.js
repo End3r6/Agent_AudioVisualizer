@@ -13,10 +13,11 @@
 // limitations under the License.
 
 class Agent {
-    constructor(x, y, direction, width, height, color) {
+    constructor(x, y, direction, speed, width, height, color) {
         this.x = x;
         this.y = y;
         this.direction = this.wrapDirection(direction); // Ensure direction is within 0 to 360
+        this.speed = speed;
         this.width = width;
         this.height = height;
         this.color = color;
@@ -83,6 +84,11 @@ class Agent {
     getColor()
     {
         return this.color;
+    }
+
+    getSpeed()
+    {
+        return this.speed;
     }
 }
 

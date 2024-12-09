@@ -19,27 +19,6 @@ import { BeatDetector } from "./BeatDetector.js"
 import { EventEmitter } from "./EventEmitter.js";
 import { SimulationSettings, SpeciesSettings } from "./Settings.js";
 
-function checkWebGLSupport() {
-    try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-            console.log('WebGL is supported');
-            return true;
-        } else {
-            console.error('WebGL is not supported');
-            return false;
-        }
-    } catch (e) {
-        console.error('WebGL is not supported', e);
-        return false;
-    }
-}
-
-if (!checkWebGLSupport()) {
-    console.error('WebGL is not supported in this browser. Please use a modern browser.');
-}
-
 
 // Get the save settings button
 const saveSettingsButton = document.getElementById('save-settings');
@@ -47,8 +26,13 @@ const saveSettingsButton = document.getElementById('save-settings');
 // Get the add species button
 const addSpeciesButton = document.getElementById('add-species');
 
-let currentAudioPlayer = null;
+const songSelect = document.getElementById('song-select');
+
 let fileUrl = null;
+let currentAudioPlayer = new AudioPlayer("");
+let animationFrameId = null;
+
+let emitter = new EventEmitter();
 
 // Add an event listener to the add species button
 addSpeciesButton.addEventListener('click', () => {
@@ -62,16 +46,19 @@ addSpeciesButton.addEventListener('click', () => {
     const newCell1 = newRow.insertCell();
     newCell1.innerHTML = '<input type="number" id="num-agents" value="100">';
 
-    // Create a new table data cell for the color
     const newCell2 = newRow.insertCell();
-    newCell2.innerHTML = '<input type="color" id="color" value="#ff0000">';
+    newCell2.innerHTML = '<input type="number" id="move-speed" value="1">';
+
+    // Create a new table data cell for the color
+    const newCell3 = newRow.insertCell();
+    newCell3.innerHTML = '<input type="color" id="color" value="#ff0000">';
 
     // Create a new table data cell for the add species settings button
-    const newCell3 = newRow.insertCell();
-    newCell3.innerHTML = '<button id="remove-species">Remove</button>';
+    const newCell4 = newRow.insertCell();
+    newCell4.innerHTML = '<button id="remove-species">Remove</button>';
 
     // Get the remove species button
-    const removeSpeciesButton = newCell3.children[0];
+    const removeSpeciesButton = newCell4.children[0];
 
     // Add an event listener to the remove species button
     removeSpeciesButton.addEventListener('click', () => {
@@ -92,16 +79,29 @@ songUploadInput.addEventListener('change', (event) => {
 
 // Add an event listener to the save settings button
 saveSettingsButton.addEventListener('click', () => {
+
+    // Stop the previous animation loop
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+    }
+
+    // Stop any existing audio playback
+    if (currentAudioPlayer.isPlaying) {
+        currentAudioPlayer.stop();
+    }
+
+    emitter.removeEventListener('onBeat');
+
     // Get the values from the input fields
     const width = parseInt(document.getElementById('width').value);
     const height = parseInt(document.getElementById('height').value);
     const fadeFactor = parseFloat(document.getElementById('fade-factor').value);
-    const diffuseFactor = parseFloat(document.getElementById('diffuse-factor').value);
+    // const diffuseFactor = parseFloat(document.getElementById('diffuse-factor').value);
     const threshold = parseFloat(document.getElementById('threshold').value);
 
     // Create a new simulation settings object
     const newSimulationSettings = new SimulationSettings(
-        width, height, fadeFactor, threshold, diffuseFactor,
+        width, height, fadeFactor, threshold, 0,
         []
     );
 
@@ -113,8 +113,9 @@ saveSettingsButton.addEventListener('click', () => {
         const row = speciesSettingsTableBody.rows[i];
 
         // Get the color and number of agents from the row
-        const color = row.cells[1].children[0].value;
+        const color = row.cells[2].children[0].value;
         const numAgents = parseInt(row.cells[0].children[0].value);
+        const moveSpeed = parseInt(row.cells[1].children[0].value);
 
         // Create a new species settings object
         const speciesSettings = new SpeciesSettings(
@@ -124,7 +125,8 @@ saveSettingsButton.addEventListener('click', () => {
                 b: parseInt(color.substr(5, 2), 16),
                 a: 255
             },
-            numAgents
+            numAgents,
+            moveSpeed
         );
 
         // Add the species settings to the new simulation settings
@@ -135,22 +137,22 @@ saveSettingsButton.addEventListener('click', () => {
     const newCanvas = new Canvas('drawing-canvas');
     newCanvas.canvas.width = newSimulationSettings.getWidth();
     newCanvas.canvas.height = newSimulationSettings.getHeight();
-
-    // Create a new emitter object
-    const newEmitter = new EventEmitter();
-
-    // Create a new audio player object
-    if (currentAudioPlayer) {
-        currentAudioPlayer.stop();
+    
+    console.log(songSelect.value);
+    if(songSelect.value == "") 
+    {
+        currentAudioPlayer.loadAudio(fileUrl);
+    }
+    else
+    {
+        currentAudioPlayer.loadAudio(songSelect.value); 
     }
 
-    currentAudioPlayer = new AudioPlayer(fileUrl);
-
     // Create a new beat detector object
-    const newBeatDetector = new BeatDetector(newEmitter, currentAudioPlayer, newSimulationSettings.getThreshold());
+    const newBeatDetector = new BeatDetector(emitter, currentAudioPlayer, newSimulationSettings.getThreshold());
 
     // Create a new simulation object
-    const newSimulation = new Simulation(newSimulationSettings, newEmitter);
+    const newSimulation = new Simulation(newSimulationSettings, emitter);
 
     // Define a new animation function
     function newAnimate() {
@@ -161,12 +163,9 @@ saveSettingsButton.addEventListener('click', () => {
         newCanvas.drawTexture(newSimulation.getDisplayTexture());
 
         // Request the next frame
-        requestAnimationFrame(newAnimate);
+        animationFrameId = requestAnimationFrame(newAnimate);
     }
 
     // Start the new animation loop
     newAnimate();
-
-    // Stop any remaining audio playback
-    currentAudioPlayer.stop();
 });

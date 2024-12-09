@@ -29,8 +29,6 @@ class Simulation
 
         this.emitter = emitter;
 
-        this.currentFrame = 0;
-
         this.agents = Array();
         for (let s = 0; s < simulationSettings.speciesSettings.length; s++) 
         {
@@ -41,6 +39,7 @@ class Simulation
                     simulationSettings.width / 2,
                     simulationSettings.height / 2, 
                     this.getRandomNumber(0, 360), 
+                    simulationSettings.speciesSettings[s].getSpeed(),
                     simulationSettings.width, 
                     simulationSettings.height,
                     species.color
@@ -75,16 +74,14 @@ class Simulation
 
         this.agents.forEach(agent => {
 
-            agent.move(1);
+            agent.move(agent.getSpeed());
     
             const position = agent.getPosition();
             this.trailTexture.setPixel(position.x, position.y, agent.color); // Add new pixel to trail texture
         });
 
         // Copy diffuse map to display texture
-        this.displayTexture.pixels = this.diffuseTexture.pixels.slice();
-
-        this.currentFrame ++;
+        this.displayTexture.pixels = this.trailTexture.pixels.slice();
     }
 
     getRandomNumber(min, max) 

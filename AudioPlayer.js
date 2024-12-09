@@ -43,7 +43,7 @@ class AudioPlayer {
             this.source.stop();
             this.source.disconnect();
             this.source = null;
-
+            
             console.log('Audio playback stopping.');
         }
         this.source = this.audioContext.createBufferSource();
@@ -51,6 +51,7 @@ class AudioPlayer {
         this.source.connect(this.analyser);
         this.analyser.connect(this.audioContext.destination);
         this.source.start(0);
+        this.isPlaying = true;
     }
 
     stop() {
@@ -58,6 +59,7 @@ class AudioPlayer {
             this.source.stop();
             this.source.disconnect();
             this.source = null;
+            this.isPlaying = false;
 
             console.log('Audio playback stopped.');
         }

@@ -11,45 +11,48 @@
 <body>
     <div class="container">
         <canvas id="drawing-canvas" width="800" height="600" style="background: black"></canvas>
-
-        <div class="simulation-settings">
+        <section class="settings-stack">
             <h2>Simulation Settings</h2>
-            <div class="side-by-side">
-                <div id="canvas-size" class="side-by-side">
+            <form id="simulation-settings">
+                <div class="side-by-side">
                     <div>
                         <label for="width">Width:</label>
-                        <input type="number" id="width" value="800">
+                        <input type="number" id="width" value="800" aria-label="Canvas Width">
                     </div>
                     <div>
                         <label for="height">Height:</label>
-                        <input type="number" id="height" value="600">
+                        <input type="number" id="height" value="600" aria-label="Canvas Height">
                     </div>
                 </div>
-            </div>
-            <div class="side-by-side">
                 <div>
                     <label for="fade-factor">Fade Factor:</label>
-                    <input type="number" id="fade-factor" value="5">
+                    <input type="number" id="fade-factor" value="5" aria-label="Fade Factor">
                 </div>
-                <div>
-                    <label for="diffuse-factor">Diffuse Factor:</label>
-                    <input type="number" id="diffuse-factor" value="0.5">
-                </div>
-            </div>
+            </form>
 
             <h2>Audio Settings</h2>
-            <div class="side-by-side" id="audio-settings">
+            <form id="audio-settings" class="side-by-side">
                 <div>
-                    <label for="song-upload">Song:</label>
+                    <label for="song-upload">Upload a Song:</label>
                     <label for="song-upload" class="custom-file-upload">Upload Song</label>
-                    <input type="file" class="song-upload" id="song-upload" accept="audio/*" />
+                    <input type="file" class="song-upload" id="song-upload" accept="audio/*" aria-label="Upload Song">
                 </div>
                 <div>
-                    <br/>
-                    <label for="threshold">Threshold:</label>
-                    <input type="number" id="threshold" value="600">
+                    <label for="song-select">Choose a Song:</label>
+                    <select name="song-select" id="song-select" class="song-select" aria-label="Select Song">
+                        <option value="">None</option>
+                        <option value="./songs/because-of-me.wav">Because of Me</option>
+                        <option value="./songs/cry.mp3">Cry</option>
+                        <option value="./songs/is-this-all.mp3">Is This All</option>
+                        <option value="./songs/welcome-to-the-world.mp3">Welcome to the World</option>
+                        <option value="./songs/without-you.mp3">Without You</option>
+                    </select>
                 </div>
-            </div>
+                <div>
+                    <label for="threshold">Threshold:</label>
+                    <input type="number" id="threshold" value="600" aria-label="Threshold">
+                </div>
+            </form>
 
             <h2>Species Settings</h2>
             <div class="species-settings-table-wrapper" style="max-height: 170px; overflow-y: auto;">
@@ -57,23 +60,25 @@
                     <thead>
                         <tr>
                             <th>Number of Agents</th>
+                            <th>Speed</th>
                             <th>Color</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
                     <tbody id="species-settings-table-body">
                         <tr>
-                            <td><input type="number" id="num-agents" value="100"></td>
-                            <td><input type="color" id="color" value="#ff0000"></td>
-                            <td><button id="remove-species">Remove</button></td>
+                            <td><input type="number" id="num-agents" value="100" aria-label="Number of Agents"></td>
+                            <td><input type="number" id="move-speed" value="1" aria-label="Speed"></td>
+                            <td><input type="color" id="color" value="#ff0000" aria-label="Color"></td>
+                            <td><button type="button" id="remove-species">Remove</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <br/>
-            <button id="add-species">Add Species</button>
-            <button id="save-settings">Run</button>
-        </div>
+            <br />
+            <button type="button" id="add-species">Add Species</button>
+            <button type="button" id="save-settings">Run</button>
+        </section>
     </div>
 
     <script src="app.js" type="module"></script>
