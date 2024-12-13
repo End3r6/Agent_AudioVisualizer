@@ -13,7 +13,7 @@
 // limitations under the License.
 
 class Agent {
-    constructor(x, y, direction, speed, width, height, color) {
+    constructor(x, y, direction, speed, width, height, color, doScreenWrap, doBeatFlash) {
         this.x = x;
         this.y = y;
         this.direction = this.wrapDirection(direction); // Ensure direction is within 0 to 360
@@ -21,6 +21,8 @@ class Agent {
         this.width = width;
         this.height = height;
         this.color = color;
+        this.doScreenWrap = doScreenWrap;
+        this.doBeatFlash = doBeatFlash;
     }
 
     wrapDirection(direction) 
@@ -47,38 +49,64 @@ class Agent {
         this.x += stepSize * Math.cos(radians);
         this.y += stepSize * Math.sin(radians);
 
-        this.bounceOffEdges();
+        this.doEdgeProcedure();
     }
 
-    bounceOffEdges() {
-        let newDirection = this.direction;
+    doEdgeProcedure() {
+        if(!this.doScreenWrap) 
+        {
+            let newDirection = this.direction;
 
-        // Check left and right boundaries
-        if (this.x <= 0 || this.x >= this.width - 1) {
-            newDirection = 180 - newDirection;
+            // Check left and right boundaries
+            if (this.x <= 0 || this.x >= this.width - 1) {
+                newDirection = 180 - newDirection;
+            }
+
+            // Check top and bottom boundaries
+            if (this.y <= 0 || this.y >= this.height - 1) {
+                newDirection = 360 - newDirection;
+            }
+
+            // Wrap the new direction
+            this.direction = this.wrapDirection(newDirection);
         }
+        else
+        {
+            // Check left and right boundaries
+            if (this.x <= 0) 
+            {
+                this.setPosition(this.width - 2, this.y);
+            }
+            else if (this.x >= this.width - 1) 
+            {
+                this.setPosition(0, this.y);
+            }
 
-        // Check top and bottom boundaries
-        if (this.y <= 0 || this.y >= this.height - 1) {
-            newDirection = 360 - newDirection;
+            // Check top and bottom boundaries
+            if (this.y <= 0) 
+            {
+                this.setPosition(this.x, this.height - 2);
+            }
+            else if (this.y >= this.height - 1) 
+            {
+                this.setPosition(this.x, 0);
+            }
         }
-
-        // Wrap the new direction
-        this.direction = this.wrapDirection(newDirection);
     }
 
     getPosition() {
         return { x: Math.round(this.x), y: Math.round(this.y) };
     }
 
+    setPosition(x, y) 
+    {
+        this.x = x;
+        this.y = y;
+    }
+
     getDirection()
     {
         return this.direction;
-    }
-
-    getBeatDetector()
-    {
-        return this.beatDetector;
     }
 
     getColor()
@@ -89,6 +117,11 @@ class Agent {
     getSpeed()
     {
         return this.speed;
+    }
+
+    getDoBeatFlash()
+    {
+        return this.doBeatFlash;
     }
 }
 

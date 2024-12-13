@@ -43,16 +43,20 @@ class SimulationSettings
 
 class SpeciesSettings
 {
-    constructor(color, numAgents, speed)
+    constructor(color, numAgents, speed, doScreenWrap, doBeatFlash)
     {
         this.color = color;
         this.numAgents = numAgents;
         this.speed = speed;
+        this.doScreenWrap = doScreenWrap;
+        this.doBeatFlash = doBeatFlash;
     }
 
     getColor() { return this.color; }
     getNumAgents() { return this.numAgents; }
     getSpeed() { return this.speed; }
+    getDoScreenWrap() { return this.doScreenWrap; }
+    getDoBeatFlash() { return this.doBeatFlash; }
 }
 
 export { SimulationSettings, SpeciesSettings }

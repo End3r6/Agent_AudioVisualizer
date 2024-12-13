@@ -51,14 +51,21 @@ addSpeciesButton.addEventListener('click', () => {
 
     // Create a new table data cell for the color
     const newCell3 = newRow.insertCell();
-    newCell3.innerHTML = '<input type="color" id="color" value="#ff0000">';
+    newCell3.innerHTML = '<input type="checkbox" id="doScreenWrap">';
+
+    const newCell4 = newRow.insertCell();
+    newCell4.innerHTML = '<input type="checkbox" id="doBeatFlash">';
+
+    // Create a new table data cell for the color
+    const newCell5 = newRow.insertCell();
+    newCell5.innerHTML = '<input type="color" id="color" value="#ff0000">';
 
     // Create a new table data cell for the add species settings button
-    const newCell4 = newRow.insertCell();
-    newCell4.innerHTML = '<button id="remove-species">Remove</button>';
+    const newCell6 = newRow.insertCell();
+    newCell6.innerHTML = '<button id="remove-species">Remove</button>';
 
     // Get the remove species button
-    const removeSpeciesButton = newCell4.children[0];
+    const removeSpeciesButton = newCell6.children[0];
 
     // Add an event listener to the remove species button
     removeSpeciesButton.addEventListener('click', () => {
@@ -113,9 +120,13 @@ saveSettingsButton.addEventListener('click', () => {
         const row = speciesSettingsTableBody.rows[i];
 
         // Get the color and number of agents from the row
-        const color = row.cells[2].children[0].value;
         const numAgents = parseInt(row.cells[0].children[0].value);
         const moveSpeed = parseInt(row.cells[1].children[0].value);
+        const doScreenWrap = row.cells[2].children[0].checked;
+        const doBeatFlash = row.cells[3].children[0].checked;
+        const color = row.cells[4].children[0].value;
+
+        console.log(doScreenWrap);
 
         // Create a new species settings object
         const speciesSettings = new SpeciesSettings(
@@ -126,7 +137,9 @@ saveSettingsButton.addEventListener('click', () => {
                 a: 255
             },
             numAgents,
-            moveSpeed
+            moveSpeed,
+            doScreenWrap,
+            doBeatFlash
         );
 
         // Add the species settings to the new simulation settings

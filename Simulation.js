@@ -42,7 +42,9 @@ class Simulation
                     simulationSettings.speciesSettings[s].getSpeed(),
                     simulationSettings.width, 
                     simulationSettings.height,
-                    species.color
+                    species.color,
+                    species.doScreenWrap,
+                    species.doBeatFlash
                 ));
             }
         }
@@ -51,7 +53,13 @@ class Simulation
         {
             for (let i = 0; i < this.agents.length; i++) 
             {
-                this.agents[i].changeDirection(this.agents[i].getDirection() + (90 + this.getRandomNumber(-1, 1))); // Adjust direction based on beat
+                this.agents[i].changeDirection(this.agents[i].getDirection() + (90 + this.getRandomNumber(-0.5, 0.5))); // Adjust direction based on beat
+
+                if(this.agents[i].getDoBeatFlash())
+                {
+                    const position = this.agents[i].getPosition();
+                    this.drawCircle(this.trailTexture, position.x, position.y, 5, this.agents[i].color);
+                }
             }
         });
     }
@@ -82,8 +90,30 @@ class Simulation
 
         // Copy diffuse map to display texture
         this.displayTexture.pixels = this.trailTexture.pixels.slice();
+        // this.drawCircle(this.displayTexture, this.width / 2, this.height / 2, 10, { r: 255, g: 0, b: 0, a: 255 });
     }
 
+    drawCircle(texture, x, y, radius, color) {
+        const centerX = x;
+        const centerY = y;
+    
+        for (let i = 0; i <= radius; i++) {
+            const y1 = Math.sqrt(radius * radius - i * i);
+    
+            // Draw all four quadrants
+            this.setPixel(texture, centerX + i, centerY + y1, color);
+            this.setPixel(texture, centerX + i, centerY - y1, color);
+            this.setPixel(texture, centerX - i, centerY + y1, color);
+            this.setPixel(texture, centerX - i, centerY - y1, color);
+        }
+    }
+    
+    setPixel(texture, x, y, color) {
+        // Ensure the coordinates are within the bounds of the texture
+        if (x >= 0 && x < texture.width && y >= 0 && y < texture.height) {
+            texture.setPixel(Math.round(x), Math.round(y), color);
+        }
+    }
     getRandomNumber(min, max) 
     {
         return Math.floor(Math.random() * (max - min + 1)) + min;
